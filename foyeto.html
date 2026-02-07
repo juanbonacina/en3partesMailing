@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa Reverso de Folleto Tríptico</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuración de color para los paneles */
+        /* 1. Panel Derecho (Cierre) - Gris Claro */
+        .panel-gris-claro { background-color: #959595; }
+        /* 2. Panel Central (Contraportada) - Negro */
+        .panel-negro { background-color: #000000; }
+        /* 3. Panel Izquierdo (Flap Interior) - Gris Medio */
+        .panel-gris-medio { background-color: #585858; }
+
+        /* Estilo para el Patrón de Puntos (Constelación - Panel Gris Claro) */
+        /* Color y Opacidad del Patrón: Blanco Roto (rgba(245, 245, 245, 0.3) -> 30% Opacidad) */
+        .pattern-dots {
+            background-image: radial-gradient(circle, rgba(245, 245, 245, 0.3) 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+
+        /* Estilo para el Patrón de Líneas Diagonales (Panel Negro) */
+        /* Color y Opacidad del Patrón: Gris Oscuro (#1a1a1a) con 15% Opacidad */
+        .pattern-lines {
+            background-image: linear-gradient(135deg, rgba(26, 26, 26, 0.15) 25%, transparent 25%),
+                              linear-gradient(225deg, rgba(26, 26, 26, 0.15) 25%, transparent 25%),
+                              linear-gradient(45deg, rgba(26, 26, 26, 0.15) 25%, transparent 25%),
+                              linear-gradient(315deg, rgba(26, 26, 26, 0.15) 25%, transparent 25%);
+            background-size: 10px 10px;
+        }
+
+        /* Estilo para el Patrón de Marca de Agua (Triángulo Abstracto - Panel Gris Medio) */
+        /* Color y Opacidad del Patrón: Blanco con 5% Opacidad */
+        .pattern-watermark::before {
+            content: "▲"; /* Placeholder para el Logo Abstracto "3 Partes" */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30rem;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.05); /* 5% Opacidad */
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Estilo base para todos los paneles */
+        .panel {
+            min-height: 400px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 p-4 font-sans antialiased" style="font-family: 'Inter', sans-serif;">
+
+    <div class="max-w-6xl mx-auto">
+        <!--<h1 class="text-2xl font-bold mb-6 text-gray-800 text-center">Vista Previa: Fondos del Reverso del Folleto</h1>
+        <p class="text-center text-sm text-gray-600 mb-8">
+            Los colores base y los patrones sutiles están aplicados según las especificaciones.
+        </p>-->
+
+        <!-- Contenedor Principal de los Tres Paneles -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <!-- PANEL IZQUIERDO (Flap Interior) - Ubicación 3 en el diseño -->
+            <div class="panel panel-gris-medio pattern-watermark text-white flex flex-col justify-between">
+                <!-- Capa de contenido para asegurar visibilidad sobre el patrón -->
+                <div class="relative z-10">
+                   <!--<h2 class="text-lg font-semibold mb-4 opacity-70">3. Panel Izquierdo</h2>
+                    <p class="text-xs italic opacity-50 mb-6">Fondo: Gris Medio (#585858).</p>
+
+                    <div class="mt-4 p-3 bg-white/10 rounded-lg">
+                        <p class="text-sm">
+                            <span class="font-bold">Patrón:</span> Logo Abstracto (Triángulo)
+                        </p>
+                        <p class="text-xs">
+                             Opacidad: 5% (Casi invisible, Marca de Agua)
+                        </p>
+                    </div>
+                    <div class="mt-auto text-xs opacity-50 pt-16">
+                         *Este panel queda oculto al plegarse.
+                    </div>-->
+                </div>
+            </div>
+
+            <!-- PANEL CENTRAL (Contraportada) - Ubicación 2 en el diseño -->
+            <div class="panel panel-negro pattern-lines text-white flex flex-col justify-between">
+                <div class="relative z-10">
+                    <!--<h2 class="text-lg font-semibold mb-4 opacity-70">2. Panel Central</h2>
+                    <p class="text-xs italic opacity-50 mb-6">Fondo: Negro (#000000).</p>
+
+                    <div class="mt-4 p-3 bg-white/10 rounded-lg">
+                        <p class="text-sm">
+                            <span class="font-bold">Patrón:</span> Líneas Diagonales Finas
+                        </p>
+                        <p class="text-xs">
+                             Opacidad: 10-15% (Añade relieve sutil)
+                        </p>
+                    </div>
+                    <div class="mt-auto text-center pt-16 text-sm opacity-50">
+                         *Este es el panel trasero del folleto cerrado.
+                    </div>-->
+                </div>
+            </div>
+
+            <!-- PANEL DERECHO (Solapa de Cierre) - Ubicación 1 en el diseño -->
+            <div class="panel panel-gris-claro pattern-dots text-gray-800 flex flex-col justify-between">
+                <div class="relative z-10">
+                   <!--<h2 class="text-lg font-semibold mb-4 opacity-80">1. Panel Derecho</h2>
+                    <p class="text-xs italic opacity-60 mb-6">Fondo: Gris Claro (#959595).</p>
+
+                    <div class="mt-4 p-3 bg-gray-900/10 rounded-lg">
+                        <p class="text-sm">
+                            <span class="font-bold">Patrón:</span> Puntos Dispersos
+                        </p>
+                        <p class="text-xs">
+                             Opacidad: 20-30% (Simula constelación/conexiones)
+                        </p>
+                    </div>
+                    <div class="mt-auto text-center pt-16 text-sm opacity-50">
+                        *Este panel se pliega para cerrar el folleto.
+                    </div>-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

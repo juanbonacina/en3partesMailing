@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>En 3 Partes - Concepto C</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define la fuente Inter y configura los colores personalizados */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Definición de colores y fuente personalizados para Tailwind 
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'navy-dark': '#0D1B2A',  Azul Marino Oscuro 
+                        'gray-light-bg': '#F1F2F4',  Blanco Roto Predominante 
+                        'gray-text': '#52616B',  Gris oscuro suave 
+                        'copper-mate': '#A8763E',  Acento Cobre Mate 
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+        
+        /* CORRECCIONES SOLICITADAS POR EL USUARIO */
+        .h-full {
+            height: 80% !important; /* Ajusta la altura del contenedor principal */
+        }
+
+        .mb-4 {
+            /* Añade un gran margin-top (12rem) al elemento que usa mb-4 */
+            margin-top: 12rem !important;
+            margin-bottom: 1rem !important;
+        }
+
+        @media (min-width: 1024px) {
+            .lg\:w-64 {
+                width: 19rem !important; /* Ancho de la imagen para desktop */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .lg\:h-64 {
+                height: 16rem !important; /* Altura de la imagen para desktop */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8 min-h-screen flex items-center justify-center font-sans">
+
+    <!-- Contenedor Principal Adaptable a 16:9 -->
+    <div class="w-full max-w-7xl aspect-video bg-gray-light-bg shadow-2xl rounded-xl overflow-hidden relative">
+
+        <!-- Contenido de la Diapositiva -->
+        <!-- La altura se ha reducido al 80% mediante el estilo personalizado .h-full -->
+        <div class="relative h-full p-12 lg:p-16 flex flex-col justify-between">
+            
+            <!-- Imagen del Logo (Flotante a la Derecha) -->
+            <!-- Sus dimensiones en lg se han ajustado a 19rem x 16rem -->
+            <div class="absolute right-0 top-0 w-1/2 h-full flex items-center justify-center z-0">
+                <img 
+                    src="IMG/EN3PARTES LOGO.png" 
+                    alt="Logo En 3 Partes - Elemento de conexión" 
+                    class="w-48 h-48 lg:w-64 lg:h-64 opacity-80" 
+                />
+            </div>
+
+
+            <!-- Título y Slogan (Esquina Superior Izquierda) -->
+            <div class="w-1/2 z-10">
+                <h1 class="text-7xl lg:text-8xl font-extrabold tracking-tight text-navy-dark leading-tight">
+                    EN 3 PARTES
+                </h1>
+                
+                <!-- Slogan Minimalista (Separado por guiones, minúsculas) -->
+                <p class="text-xl lg:text-2xl mt-3 font-light text-gray-text uppercase tracking-widest">
+                    ideamos &mdash; creamos &mdash; conectamos
+                </p>
+            </div>
+
+            <!-- Bloque de Valor de Marca (Centrado en el Tercio Inferior) -->
+            <div class="w-full max-w-4xl mx-auto text-center z-10">
+                
+                <!-- Separador Superior de Cobre -->
+                <div class="h-[1px] w-1/3 bg-copper-mate mx-auto mb-6"></div>
+
+                <!-- El margen superior de este párrafo es ahora de 12rem (3/4 de la diapositiva) -->
+                <p class="text-gray-text text-sm lg:text-base font-light mb-4">
+                    Impulsamos a las marcas a través de soluciones de merchandising que inspiran y conectan. Buscamos representar la identidad de cada empresa con productos pensados estratégicamente. Nuestro objetivo es fortalecer el vínculo con clientes y colaboradores mediante experiencias memorables.
+                </p>
+
+                <!-- Separador Inferior de Cobre -->
+                <div class="h-[1px] w-1/3 bg-copper-mate mx-auto mt-6"></div>
+                
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

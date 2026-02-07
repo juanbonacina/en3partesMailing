@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Emailing En3Partes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
+    }
+    body {
+      background: #f4f7fb;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      background: #fff;
+      max-width: 900px;
+      width: 100%;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+    }
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    input[type="file"] {
+      padding: .5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+    button {
+      padding: .8rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    button:nth-of-type(1) { background: #3498db; color: #fff; }
+    button:nth-of-type(1):hover:not(:disabled) { background: #2176bd; }
+    button:nth-of-type(2) { background: #2ecc71; color: #fff; }
+    button:nth-of-type(2):hover:not(:disabled) { background: #27ae60; }
+    button:nth-of-type(3) { background: #f39c12; color: #fff; }
+    button:nth-of-type(3):hover:not(:disabled) { background: #d68910; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    th, td {
+      padding: .75rem;
+      text-align: left;
+    }
+    th {
+      background: #3498db;
+      color: #fff;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    tr:hover {
+      background: #f1faff;
+    }
+    .note {
+      margin-top: .5rem;
+      font-size: .9rem;
+      color: #555;
+      text-align: center;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;  /* Oculto por defecto */
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .spinner {
+      border: 6px solid rgba(255,255,255,0.3);
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Herramienta de Emailing - En 3 Partes</h1>
+    <div class="actions">
+      <input type="file" id="excelInput" accept=".xlsx,.xls">
+      <button onclick="procesarExcel()">Procesar Excel</button>
+      <button onclick="descargarExcel()" id="btnDescargar" disabled>⬇ Descargar Excel actualizado</button>
+      <button onclick="enviarMails()" id="btnEnviar" disabled>📩 Enviar Mails</button>
+    </div>
+    <div id="preview"></div>
+  </div>
+
+  <div id="overlay" class="overlay">
+    <div class="spinner"></div>
+    <p>Enviando correos, por favor espere...</p>
+  </div>
+  <script>
+
+let datosClientes = [];
+
+/* --------- 1) Procesar Excel --------- */
+function procesarExcel(){
+  const fileInput = document.getElementById("excelInput");
+  if(!fileInput.files.length){alert("Seleccioná un Excel");return;}
+
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const wb = XLSX.read(new Uint8Array(e.target.result), { type:'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows  = XLSX.utils.sheet_to_json(sheet,{ header:1 });
+
+    // Mapeo directo de columnas
+    datosClientes = rows.slice(1).map(r=>({
+      "Razon Social": r[0] || "",
+      "Usuario": r[1] || "",
+      "Mail": r[2] || "",
+      "Teléfono": r[3] || "",
+      "Mail enviado": r[4] || "",
+      "Fecha del envio": r[5] || ""
+    }));
+
+    renderPreview(datosClientes);
+
+    // 👉 Descargar deshabilitado al inicio
+    document.getElementById("btnDescargar").disabled = true;
+    document.getElementById("btnEnviar").disabled = false;
+  };
+  reader.readAsArrayBuffer(fileInput.files[0]);
+}
+
+/* --------- 2) Vista previa --------- */
+function renderPreview(arr){
+  const div = document.getElementById("preview");
+  if(!arr.length){div.innerHTML="";return;}
+
+  let html = "<table><tr>";
+  Object.keys(arr[0]).forEach(c=> html+=`<th>${c}</th>`);
+  html+="</tr>";
+  arr.slice(0,20).forEach(r=>{
+    html+="<tr>";
+    Object.keys(r).forEach(c=> html+=`<td>${r[c]}</td>`);
+    html+="</tr>";
+  });
+  html+="</table>";
+  if(arr.length>20) html+=`<p class="note">Mostrando 20 de ${arr.length} filas</p>`;
+  div.innerHTML = html;
+}
+
+/* --------- 3) Descargar Excel --------- */
+function descargarExcel(){
+  // Me aseguro que la variable siempre sea un array
+  if(!Array.isArray(datosClientes) || datosClientes.length === 0){
+    alert("No hay datos para descargar");
+    return;
+  }
+
+  const ws = XLSX.utils.json_to_sheet(datosClientes,{ header:[
+    "Razon Social","Usuario","Mail","Teléfono","Mail enviado","Fecha del envio"
+  ]});
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Clientes");
+  XLSX.writeFile(wb,"clientes_actualizados.xlsx");
+}
+
+// funciones de montar y desmontar el overlay ------------------------------------------------------------
+function mostrarOverlay(){ document.getElementById("overlay").style.display = "flex"; }
+function ocultarOverlay(){ document.getElementById("overlay").style.display = "none"; }
+
+
+/* --------- 1) Aplicar status devuelto por backend --------- */
+function aplicarStatus(resp) {
+  if (!Array.isArray(resp.resultados)) return;
+
+  const fecha = resp.fecha_de_envio || new Date().toLocaleDateString("es-AR");
+
+  // mails que salieron OK
+  const mailsOk = new Set(
+    resp.resultados
+      .filter(s => s.status === "ok")
+      .map(s => s.mail.trim().toLowerCase())   // 👈 en backend es `mail`, no `Mail`
+  );
+
+  // Actualizo array de clientes
+  datosClientes = datosClientes.map(c => {
+    if (mailsOk.has(c.Mail.trim().toLowerCase())) {
+      return {
+        ...c,
+        "Mail enviado": "SI",
+        "Fecha del envio": fecha
+      };
+    }
+    return c;
+  });
+}
+
+/* --------- 2) Enviar mails --------- */
+function enviarMails() {
+  const seleccionados = datosClientes
+  .filter(r => {
+    // 1) Descartar si no hay razón social
+    if (!r["Razon Social"] || r["Razon Social"].trim() === "") return false;
+
+    // 2) Descartar si ya se envió un mail hace menos de 10 días
+    const mailEnviado = (r["Mail enviado"] || "").toString().trim().toUpperCase();
+    if (mailEnviado === "SI" /*&& diffDias(r["Fecha del envio"]) < 1000*/) {
+      return false;
+    }
+
+    // 3) Caso contrario, mantener
+    return true;
+  })
+  // 4) Solo hasta 50 clientes
+  .slice(0, 50);
+
+  if (!seleccionados.length) {
+    alert("No hay datos para enviar");
+    return;
+  }
+
+  mostrarOverlay();
+
+  fetch("/send-emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(seleccionados)
+  })
+    .then(r => r.json())
+    .then(resp => {
+      alert(`Mails enviados: ${resp.resultados?.length || 0}`);
+      
+      aplicarStatus(resp); // ✅ pisa solo los que tengan status ok
+      renderPreview(datosClientes);
+      document.getElementById("btnDescargar").disabled = false;
+    })
+    .catch(err => {
+      alert("Error al enviar mails");
+      console.error(err);
+    })
+    .finally(() => {
+      ocultarOverlay();
+    });
+}
+/* --------- Utilidad: diferencia de días --------- */
+function diffDias(fechaStr) {
+  if (!fechaStr) return Infinity;
+
+  // Si tiene coma, separar fecha y hora
+  const soloFecha = fechaStr.split(",")[0].trim(); // "6/9/2025"
+  const partes = soloFecha.split("/"); // [6, 9, 2025]
+
+  if (partes.length < 3) return Infinity;
+
+  const [d, m, y] = partes.map(Number);
+  const fecha = new Date(y, m - 1, d); // crea bien la fecha
+
+  if (isNaN(fecha.getTime())) return Infinity;
+
+  const hoy = new Date();
+  const diff = (hoy - fecha) / (1000 * 60 * 60 * 24);
+  return diff;
+}
+  </script>
+</body>
+</html>
