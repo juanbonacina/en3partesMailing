@@ -22,8 +22,8 @@ router.post('/send-emails', async (req, res) => {
 
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
-      port: 587,
-      secure: false, // false para puerto 587
+      port: 465,
+      secure: true, // false para puerto 587
       auth: {
         user: GMAIL_USER,
         pass: GMAIL_PASS // Consejo: Usa variables de entorno para las credenciales
@@ -40,7 +40,7 @@ router.post('/send-emails', async (req, res) => {
 
       const promesasTanda = tanda.map(cliente => {
         const mailOptions = {
-          from: "ventas@en3partes.com",
+          from: GMAIL_USER,
           to: cliente.Mail,
           subject: "Productos que hablan por tu marca",
           html: `
@@ -88,61 +88,5 @@ router.post('/send-emails', async (req, res) => {
 });
 
 ///---------------------------------------------------------------------------------------------------------------------------------------------
-/*
-router.post('/send-emails', async (req, res) => {
-  try {
-    const clientes = Array.isArray(req.body) ? req.body : [req.body]; // asegura que sea array
 
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      auth: {
-        user: "ventas@en3partes.com",
-        pass: "rkgr lvoe mncw mtye"
-      }
-    });
-
-    // Generamos todas las promesas de envío
-    const promesas = clientes.map(cliente => {
-      const mailOptions = {
-        from: "ventas@en3partes.com",
-        to: cliente.Mail,
-        subject: "Productos que hablan por tu marca",
-        html: `
-          <p>Hola ${cliente.Usuario},</p>
-          <p>Somos <b>En 3 Partes</b> y trabajamos para que cada acción de marketing se convierta en una experiencia que deje huella. Diseñamos y seleccionamos productos que reflejan la esencia de tu marca, fortalecen su presencia y generan fidelidad en tus clientes y colaboradores.</p>
-          <p>Queremos ser tu socio estratégico para impulsar el crecimiento de tu marca con soluciones creativas, personalizadas y de alta calidad.</p>
-          <p>📂 Conocé todo lo que podemos hacer por vos: 
-            <a href="https://drive.google.com/file/d/1hPL2b85tpAwnzGEbe9u0xNywO_8sGqcV/view?usp=sharing" target="_blank">Ver catálogo</a>
-          </p>
-          <p>Saludos,<br>En 3 Partes.</p>
-        `
-      };
-
-      return transporter.sendMail(mailOptions)
-        .then(() => {
-          console.log(`✔ Mail enviado a: ${cliente.Mail}`);
-          return { mail: cliente.Mail, status: "ok" };
-        })
-        .catch(err => {
-          console.error(`❌ Error con ${cliente.Mail}:`, err.message);
-          return { mail: cliente.Mail, status: "error", error: err.message };
-        });
-    });
-
-    // Ejecutamos todo en paralelo
-    const resultados = await Promise.all(promesas);
-    const fecha_de_envio = clientes['fecha de envio'] = new Date().toLocaleString("es-AR")
-
-    console.log("los resultados son", resultados)
-
-    res.json({ status: "finalizado", resultados, fecha_de_envio});
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error al enviar correos");
-  }
-});*/
-
-//'juanpablobonacina15@gmail.com',//
 export default router; 
