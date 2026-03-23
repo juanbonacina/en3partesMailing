@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Router } from "express";
 import nodemailer from 'nodemailer';
 
@@ -6,6 +7,9 @@ const router = Router();
 router.get('/', (req, res)=>{
     res.render("/index")
 })
+
+const GMAIL_USER = process.env.GMAIL_USER;       
+const GMAIL_PASS = process.env.GMAIL_PASS;  
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -19,9 +23,10 @@ router.post('/send-emails', async (req, res) => {
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,
+      secure: false, // false para puerto 587
       auth: {
-        user: "ventas@en3partes.com",
-        pass: "rkgr lvoe mncw mtye" // Consejo: Usa variables de entorno para las credenciales
+        user: GMAIL_USER,
+        pass: GMAIL_PASS // Consejo: Usa variables de entorno para las credenciales
       }
     });
 
@@ -43,7 +48,7 @@ router.post('/send-emails', async (req, res) => {
             <p>Somos <b>En 3 Partes</b> y trabajamos para que cada acción de marketing se convierta en una experiencia que deje huella. Diseñamos y seleccionamos productos que reflejan la esencia de tu marca, fortalecen su presencia y generan fidelidad en tus clientes y colaboradores.</p>
             <p>Queremos ser tu socio estratégico para impulsar el crecimiento de tu marca con soluciones creativas, personalizadas y de alta calidad.</p>
             <p>📂 Conocé todo lo que podemos hacer por vos: 
-              <a href="https://drive.google.com/file/d/1Cdx-eCN4y9T-FWqHF6OOuPDkbLK3-uR1/view?usp=sharing" target="_blank">Ver catálogo</a>
+              <a href="https://drive.google.com/file/d/19LUfRA_SoGRSywe2_hEq1GS4cYqwiYjM/view?usp=sharing" target="_blank">Ver catálogo</a>
             </p>
             <p>Saludos,<br>En 3 Partes.</p>
           `
