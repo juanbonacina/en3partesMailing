@@ -25,12 +25,18 @@ router.post('/send-emails', async (req, res) => {
     const resultadosGenerales = [];
 
     let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true, // false para puerto 587
+      service: 'gmail',
       auth: {
         user: GMAIL_USER,
         pass: GMAIL_PASS // Consejo: Usa variables de entorno para las credenciales
+      },
+      pool: true, // Muy importante para enviar tandas (mantiene la conexión abierta)
+      connectionTimeout: 30000, // 30 segundos de margen
+      greetingTimeout: 30000,
+      socketTimeout: 30000,
+      tls: {
+        // Esto evita que la conexión se caiga por problemas de certificados en el servidor de Render
+        rejectUnauthorized: false
       }
     });
 
