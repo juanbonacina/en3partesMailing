@@ -34,6 +34,10 @@ router.post('/send-emails', async (req, res) => {
       }
     });
 
+    console.log("Revisando configuración...");
+    console.log("USER:", GMAIL_USER ? "Cargado ✅" : "VACÍO ❌");
+    console.log("PASS:", GMAIL_PASS ? "Cargado ✅" : "VACÍO ❌");
+
     // Función para pausar la ejecución
     const esperar = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
