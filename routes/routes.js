@@ -1,21 +1,82 @@
 import 'dotenv/config';
 import { Router } from "express";
 import nodemailer from 'nodemailer';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const router = Router();
 
-router.get('/', (req, res)=>{
-    res.render("/index")
-})
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+
+// ── Middleware de autenticación ───────────────────────────────────────────────
+function requireLogin(req, res, next) {
+  if (req.session && req.session.usuario) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+ 
+// ── Rutas de login ────────────────────────────────────────────────────────────
+router.get('/login', (req, res) => {
+  res.redirect('/login.html');
+});
+ 
+  const LOGIN_USER = process.env.LOGIN_USER;
+  const LOGIN_PASS = process.env.LOGIN_PASS;
+
+router.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+    console.log("EMAIL recibido:  |" + email + "|");
+    console.log("PASS recibida:   |" + password + "|");
+    console.log("EMAIL del env:   |" + process.env.LOGIN_USER + "|");
+    console.log("PASS del env:    |" + process.env.LOGIN_PASS + "|");
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email y contraseña son obligatorios' });
+  }
+ 
+  // TODO: reemplazá con tu validación real (base de datos, etc.)
+  const isValid = email == LOGIN_USER && password == LOGIN_PASS;
+ 
+  if (!isValid) {
+    return res.status(401).json({ message: 'Credenciales incorrectas' });
+  }
+ 
+  req.session.usuario = { email };
+  return res.status(200).json({ redirect: '/index.html' });
+});
+ 
+router.post('/logout', (req, res) => {
+  req.session.destroy(() => res.redirect('/login'));
+});
+ 
+// ── Rutas protegidas ──────────────────────────────────────────────────────────
+router.get('/', requireLogin, (req, res) => {
+  res.redirect('/index.html');
+});
+ 
+router.get('/index.html', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+
+// Logout
+router.post('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/login');
+});
+
+
 
 const GMAIL_USER = process.env.GMAIL_USER;       
 const GMAIL_PASS = process.env.GMAIL_PASS;  
 
 
 console.log("Revisando configuración...");
-console.log("USER:", GMAIL_USER ? "Cargado ✅" : "VACÍO ❌");
-console.log("PASS:", GMAIL_PASS ? "Cargado ✅" : "VACÍO ❌");
-//----------------------------------------------------------------------------------------------------------------------------------------------
+console.log("USER-G:", GMAIL_USER ? "Cargado ✅" : "VACÍO ❌");
+console.log("PASS-G:", GMAIL_PASS ? "Cargado ✅" : "VACÍO ❌");
+
 
 router.post('/send-emails', async (req, res) => {
   try {

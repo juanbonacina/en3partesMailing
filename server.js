@@ -1,9 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
-import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
-import routes from './public/routes/routes.js'
+import routes from './routes/routes.js'
+import session from 'express-session';
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,8 +17,20 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 
 // Middleware
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname,"public")));
+
+app.use(session({
+  secret: '123456',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
+
+
+
+app.use(express.static(path.join(__dirname,"public"),{
+   index: false // deshabilita el auto-serve de index.html
+}));
+
 
 app.use(routes);
 
