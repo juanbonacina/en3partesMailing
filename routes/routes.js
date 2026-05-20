@@ -117,15 +117,17 @@ router.post('/send-emails', async (req, res) => {
         const mailOptions = {
           from: GMAIL_USER,
           to: cliente.Mail,
-          subject: "Productos que hablan por tu marca",
+          subject: "Soluciones en merchandising e indumentaria corporativa - EN3PARTES SRL",
           html: `
-            <p>Hola ${cliente.Usuario},</p>
-            <p>Somos <b>En 3 Partes</b> y trabajamos para que cada acción de marketing se convierta en una experiencia que deje huella. Diseñamos y seleccionamos productos que reflejan la esencia de tu marca, fortalecen su presencia y generan fidelidad en tus clientes y colaboradores.</p>
-            <p>Queremos ser tu socio estratégico para impulsar el crecimiento de tu marca con soluciones creativas, personalizadas y de alta calidad.</p>
-            <p>📂 Conocé todo lo que podemos hacer por vos: 
+            <p>Estimado/a ${cliente.Usuario},</p>
+            <p>Somos <b>En 3 Partes</b> yproveemos merchandising corporativo para marcas líderes. .</p>
+            <p>Colaboramos estrechamente con los equipos de Marketing, RRHH y Compras, brindando un soporte integral para que cada producto refleje con precisión la identidad de su marca.</p>
+            <p>Los invito a revisar nuestro catálogo adjunto para evaluar nuestra propuesta y variedad de soluciones de cara a sus futuras campañas:
               <a href="https://drive.google.com/file/d/19LUfRA_SoGRSywe2_hEq1GS4cYqwiYjM/view?usp=sharing" target="_blank">Ver catálogo</a>
             </p>
-            <p>Saludos,<br>En 3 Partes.</p>
+            <p>Estamos a disposición para armar presupuestos a medida o responder cualquier inquietud.</p>
+            <p>Atentamente,</p>
+            <p>Equipo de Ventas |<br>En 3 Partes SRL. 📱 11 3144-3539</p>
           `
         };
 
