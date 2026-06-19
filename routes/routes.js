@@ -119,8 +119,8 @@ router.post('/send-emails', async (req, res) => {
           to: cliente.Mail,
           subject: "Soluciones en merchandising e indumentaria corporativa - EN3PARTES SRL",
           html: `
-            <p>Estimado/a ${cliente.Usuario},</p>
-            <p>Somos <b>En 3 Partes</b> yproveemos merchandising corporativo para marcas líderes. .</p>
+            <p>Estimado/a ${cliente.Usuario}, un gusto saludarte</p>
+            <p>Somos <b>En 3 Partes</b> y proveemos merchandising corporativo para marcas líderes. .</p>
             <p>Colaboramos estrechamente con los equipos de Marketing, RRHH y Compras, brindando un soporte integral para que cada producto refleje con precisión la identidad de su marca.</p>
             <p>Los invito a revisar nuestro catálogo adjunto para evaluar nuestra propuesta y variedad de soluciones de cara a sus futuras campañas:
               <a href="https://drive.google.com/file/d/19LUfRA_SoGRSywe2_hEq1GS4cYqwiYjM/view?usp=sharing" target="_blank">Ver catálogo</a>
@@ -128,6 +128,7 @@ router.post('/send-emails', async (req, res) => {
             <p>Estamos a disposición para armar presupuestos a medida o responder cualquier inquietud.</p>
             <p>Atentamente,</p>
             <p>Equipo de Ventas |<br>En 3 Partes SRL. 📱 11 3144-3539</p>
+            <a href="https://en3partes.com/" traget="_blank">Visita nuestra web</a>
           `
         };
 
