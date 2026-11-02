@@ -28,10 +28,6 @@ router.get('/login', (req, res) => {
 
 router.post('/api/login', (req, res) => {
   const { email, password } = req.body;
-    console.log("EMAIL recibido:  |" + email + "|");
-    console.log("PASS recibida:   |" + password + "|");
-    console.log("EMAIL del env:   |" + process.env.LOGIN_USER + "|");
-    console.log("PASS del env:    |" + process.env.LOGIN_PASS + "|");
   if (!email || !password) {
     return res.status(400).json({ message: 'Email y contraseña son obligatorios' });
   }
@@ -117,18 +113,23 @@ router.post('/send-emails', async (req, res) => {
         const mailOptions = {
           from: GMAIL_USER,
           to: cliente.Mail,
-          subject: "Soluciones en merchandising e indumentaria corporativa - EN3PARTES SRL",
+          subject: "Asegurá tus regalos de fin de año",
           html: `
-            <p>Estimado/a ${cliente.Usuario}, un gusto saludarte</p>
-            <p>Somos <b>En 3 Partes</b> y proveemos merchandising corporativo para marcas líderes. .</p>
-            <p>Colaboramos estrechamente con los equipos de Marketing, RRHH y Compras, brindando un soporte integral para que cada producto refleje con precisión la identidad de su marca.</p>
-            <p>Los invito a revisar nuestro catálogo adjunto para evaluar nuestra propuesta y variedad de soluciones de cara a sus futuras campañas:
+            <p>Hola ${cliente.Usuario},</p>
+            <p>Se acerca el fin de año y estamos tomando los últimos pedidos para la agenda de producción de diciembre.</p>
+            <p>Creamos propuestas únicas y 100% personalizadas con tu marca, adaptando nuestro catálogo o materializando la idea que tengas en mente.</p>
+            <p>
               <a href="https://drive.google.com/file/d/19LUfRA_SoGRSywe2_hEq1GS4cYqwiYjM/view?usp=sharing" target="_blank">Ver catálogo</a>
             </p>
-            <p>Estamos a disposición para armar presupuestos a medida o responder cualquier inquietud.</p>
-            <p>Atentamente,</p>
-            <p>Equipo de Ventas |<br>En 3 Partes SRL. 📱 11 3144-3539</p>
-            <a href="https://en3partes.com/" traget="_blank">Visita nuestra web</a>
+            <p><b>No te quedes afuera.</b> Respondé este correo con estos datos y un asesor te contacta hoy mismo para enviarte una propuesta:</p>
+            <ul>
+              <li>Cantidad estimada:</li>
+              <li>Presupuesto por persona:</li>
+              <li>Fecha del evento / entrega:</li>
+            </ul>
+            <p>Saludos.</p>
+            <p>Equipo de ventas<br><b>EN3PARTES</b></p>
+            <p><a href="https://en3partes.com/" target="_blank">Visitá nuestra web</a></p>
           `
         };
 
